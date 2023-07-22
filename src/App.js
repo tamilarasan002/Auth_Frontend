@@ -6,8 +6,9 @@ function App() {
   const [tasks, setTasks] = useState([]);
 
   // Set the base URL for Axios
-  axios.defaults.baseURL = 'http://backend-service.authen.svc.cluster.local:4000';
 
+  axios.defaults.baseURL = process.env.BACKEND_URL;
+ 
   // Fetch tasks from the server when the component mounts
   useEffect(() => {
     fetchTasks();
