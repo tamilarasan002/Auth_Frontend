@@ -5,6 +5,8 @@ function App() {
   const [task, setTask] = useState('');
   const [tasks, setTasks] = useState([]);
 
+  const backendUrl = process.env.MY_BACK_URL || 'http://localhost:4000;
+
   // Fetch tasks from the server when the component mounts
   useEffect(() => {
     fetchTasks();
