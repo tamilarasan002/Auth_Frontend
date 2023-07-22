@@ -11,7 +11,8 @@ function App() {
   // Fetch tasks from the server when the component mounts
   useEffect(() => {
     fetchTasks();
-  }, [fetchTasks]);
+  // eslint-disable-next-line no-use-before-define
+  }, []);
 
   const fetchTasks = async () => {
     try {
