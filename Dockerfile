@@ -10,6 +10,8 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+RUN npm install axios
+
 # Copy all files from the current directory to the working directory in the container
 COPY . .
 
