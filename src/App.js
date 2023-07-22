@@ -5,10 +5,9 @@ function App() {
   const [task, setTask] = useState('');
   const [tasks, setTasks] = useState([]);
 
-  // Set the base URL for Axios
+  // Replace 'REACT_APP_BACKEND_URL' with your environment variable for the backend URL
+  const backendURL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000';
 
-  axios.defaults.baseURL = process.env.BACKEND_URL || 'http://localhost:4000';
- 
   // Fetch tasks from the server when the component mounts
   useEffect(() => {
     fetchTasks();
@@ -16,7 +15,7 @@ function App() {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get('/api/tasks');
+      const response = await axios.get(`${backendURL}/api/tasks`);
       setTasks(response.data);
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -25,7 +24,7 @@ function App() {
 
   const addTask = async () => {
     try {
-      await axios.post('/api/tasks', { task });
+      await axios.post(`${backendURL}/api/tasks`, { task });
       setTask('');
       fetchTasks(); // Fetch updated tasks after adding a new one
     } catch (error) {
