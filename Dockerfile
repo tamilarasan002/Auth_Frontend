@@ -1,19 +1,27 @@
 # Use the official Node.js image as the base image
-FROM node:14.17.6-alpine
+FROM node:14.17-alpine
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the package.json and package-lock.json files to the container
+# Copy package.json and package-lock.json (if available) to the working directory
 COPY package*.json ./
 
-# Install Node.js dependencies
+# Install dependencies
 RUN npm install
 
-# Copy the rest of the application files to the container
+# Copy all files from the current directory to the working directory in the container
 COPY . .
 
-EXPOSE 8085
+# Build the React.js project
+RUN npm run build
 
-# Start the React development server
+EXPOSE 3000
+
+# Set the environment variable to specify the port your React.js app is listening on (optional)
+ENV REACT_APP_BACKEND_URL=http://backend-service.authen.svc.cluster.local:4000
+
+# Set the command to start the React.js application
 CMD ["npm", "start"]
+
+
