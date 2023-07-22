@@ -5,8 +5,6 @@ function App() {
   const [task, setTask] = useState('');
   const [tasks, setTasks] = useState([]);
 
-  const backendUrl = process.env.MY_BACK_URL || 'http://localhost:4000';
-
   // Fetch tasks from the server when the component mounts
   useEffect(() => {
     fetchTasks();
@@ -14,7 +12,7 @@ function App() {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get('http://env.MY_BACK_URL/api/tasks');
+      const response = await axios.get('http://backend-service.authen.svc.cluster.local:4000/api/tasks');
       setTasks(response.data);
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -23,7 +21,7 @@ function App() {
 
   const addTask = async () => {
     try {
-      await axios.post('http://env.MY_BACK_URL/api/tasks', { task });
+      await axios.post('http://backend-service.authen.svc.cluster.local:4000/api/tasks', { task });
       setTask('');
       fetchTasks(); // Fetch updated tasks after adding a new one
     } catch (error) {
