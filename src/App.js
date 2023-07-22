@@ -7,7 +7,7 @@ function App() {
 
   // Set the base URL for Axios
 
-  axios.defaults.baseURL = process.env.BACKEND_URL;
+  axios.defaults.baseURL = process.env.BACKEND_URL || 'http://localhost:4000';
  
   // Fetch tasks from the server when the component mounts
   useEffect(() => {
