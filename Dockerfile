@@ -13,7 +13,7 @@ RUN npm install
 # Copy the rest of the application files to the container
 COPY . .
 
-EXPOSE 8080
+EXPOSE 3000
 
 # Start the React development server
 CMD ["npm", "start"]
