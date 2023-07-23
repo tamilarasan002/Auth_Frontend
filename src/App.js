@@ -15,11 +15,36 @@ function App() {
   }, []);
 
 // Update the listening address to 0.0.0.0 to make the server accessible to other services within the cluster
-const host = '0.0.0.0';
+  const fetchTasks = async () => {
+    try {
+      const response = await axios.get(`${backendURL}/api/tasks`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`, // Include "Bearer" prefix
+        },
+      });
+      setTasks(response.data);
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+    }
+  };
 
-app.listen(port, host, () => {
-  console.log(`Backend service is running on http://${host}:${port}`);
-});
+  const addTask = async () => {
+    try {
+      await axios.post(
+        `${backendURL}/api/tasks`,
+        { task },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // Include "Bearer" prefix
+          },
+        }
+      );
+      setTask('');
+      fetchTasks(); // Fetch updated tasks after adding a new one
+    } catch (error) {
+      console.error('Error adding task:', error);
+    }
+  };
 
   return (
     <div>
