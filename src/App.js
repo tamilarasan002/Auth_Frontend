@@ -14,25 +14,12 @@ function App() {
   // eslint-disable-next-line no-use-before-define
   }, []);
 
-  const fetchTasks = async () => {
-    try {
-      const response = await axios.get(`${backendURL}/api/tasks`);
-      setTasks(response.data);
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-    }
-  };
+// Update the listening address to 0.0.0.0 to make the server accessible to other services within the cluster
+const host = '0.0.0.0';
 
- const addTask = async () => {
-  try {
-    console.log('Sending request with token:', localStorage.getItem('token')); // Assuming the token is stored in 'localStorage'
-    await axios.post(`${backendURL}/api/tasks`, { task });
-    setTask('');
-    fetchTasks(); // Fetch updated tasks after adding a new one
-  } catch (error) {
-    console.error('Error adding task:', error);
-  }
-};
+app.listen(port, host, () => {
+  console.log(`Backend service is running on http://${host}:${port}`);
+});
 
   return (
     <div>
