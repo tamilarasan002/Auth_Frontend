@@ -23,15 +23,16 @@ function App() {
     }
   };
 
-  const addTask = async () => {
-    try {
-      await axios.post(`${backendURL}/api/tasks`, { task });
-      setTask('');
-      fetchTasks(); // Fetch updated tasks after adding a new one
-    } catch (error) {
-      console.error('Error adding task:', error);
-    }
-  };
+ const addTask = async () => {
+  try {
+    console.log('Sending request with token:', localStorage.getItem('token')); // Assuming the token is stored in 'localStorage'
+    await axios.post(`${backendURL}/api/tasks`, { task });
+    setTask('');
+    fetchTasks(); // Fetch updated tasks after adding a new one
+  } catch (error) {
+    console.error('Error adding task:', error);
+  }
+};
 
   return (
     <div>
