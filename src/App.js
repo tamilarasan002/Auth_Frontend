@@ -5,16 +5,14 @@ function App() {
   const [task, setTask] = useState('');
   const [tasks, setTasks] = useState([]);
 
-  // Replace 'REACT_APP_BACKEND_URL' with your environment variable for the backend URL
-  const backendURL = "http://127.0.0.1:4000";
+  // Use environment variable for the backend URL
+  const backendURL = process.env.REACT_APP_BACKEND_URL ||'http://127.0.0.1:4000';
 
   // Fetch tasks from the server when the component mounts
   useEffect(() => {
     fetchTasks();
-  // eslint-disable-next-line no-use-before-define
   }, []);
 
-// Update the listening address to 0.0.0.0 to make the server accessible to other services within the cluster
   const fetchTasks = async () => {
     try {
       const response = await axios.get(`${backendURL}/api/tasks`, {
@@ -66,7 +64,5 @@ function App() {
     </div>
   );
 }
-
-console.log(process.env.REACT_APP_BACKEND_URL);
 
 export default App;
