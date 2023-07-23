@@ -1,23 +1,23 @@
+// frontend/src/App.js
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const authServerURL = 'http://127.0.0.1:5001';
+
 function App() {
-  const [task, setTask] = useState('');
   const [tasks, setTasks] = useState([]);
 
-  // Use environment variable for the backend URL
-  const backendURL = process.env.REACT_APP_BACKEND_URL ||'http://127.0.0.1:4000';
-
-  // Fetch tasks from the server when the component mounts
   useEffect(() => {
     fetchTasks();
   }, []);
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get(`${backendURL}/api/tasks`, {
+      const token = await generateToken('USER_ID_HERE'); // Replace with the actual user ID
+      const response = await axios.get('http://127.0.0.1:4000/api/tasks', {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`, // Include "Bearer" prefix
+          Authorization: `Bearer ${token}`,
         },
       });
       setTasks(response.data);
@@ -26,39 +26,24 @@ function App() {
     }
   };
 
-  const addTask = async () => {
+  const generateToken = async (userId) => {
     try {
-      await axios.post(
-        `${backendURL}/api/tasks`,
-        { task },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // Include "Bearer" prefix
-          },
-        }
-      );
-      setTask('');
-      fetchTasks(); // Fetch updated tasks after adding a new one
+      const response = await axios.post(`${authServerURL}/generate-token`, {
+        userId,
+      });
+      return response.data.token;
     } catch (error) {
-      console.error('Error adding task:', error);
+      console.error('Error generating token:', error);
+      return null;
     }
   };
 
   return (
     <div>
       <h1>To-Do List</h1>
-      <div>
-        <input
-          type="text"
-          value={task}
-          onChange={(e) => setTask(e.target.value)}
-          placeholder="Enter task"
-        />
-        <button onClick={addTask}>Add Task</button>
-      </div>
       <ul>
-        {tasks.map((task, index) => (
-          <li key={index}>{task.task}</li>
+        {tasks.map((task) => (
+          <li key={task.id}>{task.title}</li>
         ))}
       </ul>
     </div>
