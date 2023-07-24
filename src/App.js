@@ -6,8 +6,7 @@ function App() {
   const [tasks, setTasks] = useState([]);
 
   // Use environment variable for the backend URL
-  const backendURL = 'http://127.0.0.1:4000';
-  const authServiceURL = 'http://127.0.0.1:5001';
+  const backendURL = process.env.REACT_APP_BACKEND_URL ||'http://127.0.0.1:4000';
 
   // Fetch tasks from the server when the component mounts
   useEffect(() => {
@@ -45,17 +44,6 @@ function App() {
     }
   };
 
-  const generateAndSendToken = async () => {
-    try {
-      const sub = '-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmAZTFq5AJVHCiw5cMJUdp/4EwrmJ20NlsqdHs1gM2eV2tUOWTtIadKyATIeq1aoLs/WoeveZXvwyxtbsHNq5hlk+Bcnzh8IQwbkP2Fl9v6RxdKy0Lh4iqu/8Mx4t/j+Afi9klpd/Pz6G1bFzwARmzxeESWwKqJGhiYbeeCUAk4bB/bI89hVVvYitbbRRXSJc3OlXumi45C8sycKfP/Oym1n6slkcWdv3FhpwtAyZ3c+LA5vVU8omoQf3WJyYCRl2m8OAKtEI+fU6pdRgPikqi4k9BOQsbwy+99Bq/JlueeeJuLAxE4XPg/tNBhfIWzn4uyDlanF61Gy9RpKUEjQVBQIDAQAB\n-----END PUBLIC KEY-----';
- // Replace 'your-subject' with the actual subject
-      const response = await axios.post(`${authServiceURL}/generate-and-send-token`, { sub });
-      console.log(response.data);
-    } catch (error) {
-      console.error('Error generating and sending token:', error);
-    }
-  };
-
   return (
     <div>
       <h1>To-Do List</h1>
@@ -73,9 +61,9 @@ function App() {
           <li key={index}>{task.task}</li>
         ))}
       </ul>
-      <button onClick={generateAndSendToken}>Generate and Send Token</button>
     </div>
   );
 }
 
 export default App;
+
