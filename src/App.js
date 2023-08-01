@@ -6,7 +6,7 @@ function App() {
   const [tasks, setTasks] = useState([]);
 
   // Use environment variable for the backend URL
-  const backendURL = 'backend-service.tamil.svc.cluster.local:4000';
+  const backendURL = process.env.BACKEND_URL;
 
   // Fetch tasks from the server when the component mounts
   useEffect(() => {
