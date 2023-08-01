@@ -5,17 +5,14 @@ function App() {
   const [task, setTask] = useState('');
   const [tasks, setTasks] = useState([]);
 
-  // Use environment variable for the backend URL
-  const backendURL = process.env.BACKEND_URL;
-
   // Fetch tasks from the server when the component mounts
   useEffect(() => {
     fetchTasks();
-  }, []);
+  }, [fetchTasks]); // Include fetchTasks in the dependency array
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get(`${backendURL}/api/tasks`, {
+      const response = await axios.get('/api/tasks', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`, // Include "Bearer" prefix
         },
@@ -29,7 +26,7 @@ function App() {
   const addTask = async () => {
     try {
       await axios.post(
-        `${backendURL}/api/tasks`,
+        '/api/tasks',
         { task },
         {
           headers: {
@@ -66,4 +63,3 @@ function App() {
 }
 
 export default App;
-
