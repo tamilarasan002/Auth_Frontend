@@ -8,7 +8,7 @@ function App() {
   // Fetch tasks from the server when the component mounts
   useEffect(() => {
     fetchTasks();
-  }, [fetchTasks]); // Include fetchTasks in the dependency array
+  }, []);
 
   const fetchTasks = async () => {
     try {
