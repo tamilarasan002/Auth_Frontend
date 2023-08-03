@@ -20,8 +20,6 @@ RUN npm run build
 
 EXPOSE 3000
 
-# Set the environment variable to specify the port your React.js app is listening on (optional)
-ENV REACT_APP_BACKEND_URL=http://backend-service.authen.svc.cluster.local:4000
 
 # Set the command to start the React.js application
 CMD ["npm", "start"]
