@@ -5,6 +5,9 @@ function App() {
   const [task, setTask] = useState('');
   const [tasks, setTasks] = useState([]);
 
+  // Use environment variable for the backend URL
+  const backendURL = 'http://127.0.0.1:4000';
+
   // Fetch tasks from the server when the component mounts
   useEffect(() => {
     fetchTasks();
@@ -12,7 +15,7 @@ function App() {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get('/api/tasks', {
+      const response = await axios.get(`${backendURL}/api/tasks`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`, // Include "Bearer" prefix
         },
@@ -26,7 +29,7 @@ function App() {
   const addTask = async () => {
     try {
       await axios.post(
-        '/api/tasks',
+        `${backendURL}/api/tasks`,
         { task },
         {
           headers: {
