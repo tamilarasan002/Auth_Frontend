@@ -5,8 +5,7 @@ pipeline {
         DOCKER_REGISTRY = "192.168.4.81:5000"
         DOCKER_IMAGE_NAME = "web-app"
         KUBE_CONFIG = credentials('kubeconfig')
-        BUILD_NUMBER = 1.0
-     
+        BUILD_NUMBER = "${env.BUILD_ID}" // Using Jenkins' built-in build ID for unique build numbers
     }
 
     stages {
@@ -19,7 +18,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:v${BUILD_NUMBER}")
+                    sh "sudo docker build -t ${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:v${BUILD_NUMBER} ."
                 }
             }
         }
@@ -27,13 +26,12 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry("http://${DOCKER_REGISTRY}") {
-                        docker.image("${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:v${BUILD_NUMBER}").push()
-                    }
+                    sh "sudo docker login ${DOCKER_REGISTRY}"
+                    sh "sudo docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:v${BUILD_NUMBER}"
                 }
             }
         }
-    
+
         stage('Deploy App to Kubernetes') {
             steps {
                 script {
