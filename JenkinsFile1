@@ -5,9 +5,8 @@ pipeline {
         DOCKER_REGISTRY = "192.168.4.81:5000"
         DOCKER_IMAGE_NAME = "web-app"
         KUBE_CONFIG = credentials('kubeconfig')
-        BUILD_NUMBER = "${env.BUILD_ID}" // Using Jenkins' built-in build ID for unique build numbers
-        SSH_KEY_ID = 'k8s-ssh' // Your Jenkins SSH key ID
-        REMOTE_HOST = '192.168.4.81' // Replace with the actual address of your remote machine
+        BUILD_NUMBER = 1.0
+     
     }
 
     stages {
@@ -19,29 +18,22 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sshagent([SSH_KEY_ID]) {
-                    sh """
-                        ssh -o StrictHostKeyChecking=no ${REMOTE_HOST} '
-                            docker build -t ${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:v${BUILD_NUMBER} .
-                        '
-                    """
+                script {
+                    docker.build("${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:v${BUILD_NUMBER}",".")
                 }
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                sshagent([SSH_KEY_ID]) {
-                    sh """
-                        ssh -o StrictHostKeyChecking=no ${REMOTE_HOST} '
-                            docker login ${DOCKER_REGISTRY}
-                            docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:v${BUILD_NUMBER}
-                        '
-                    """
+                script {
+                    docker.withRegistry("http://${DOCKER_REGISTRY}") {
+                        docker.image("${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:v${BUILD_NUMBER}").push()
+                    }
                 }
             }
         }
-
+    
         stage('Deploy App to Kubernetes') {
             steps {
                 script {
