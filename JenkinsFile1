@@ -6,6 +6,8 @@ pipeline {
         DOCKER_IMAGE_NAME = "web-app"
         KUBE_CONFIG = credentials('kubeconfig')
         BUILD_NUMBER = "${env.BUILD_ID}" // Using Jenkins' built-in build ID for unique build numbers
+        SSH_KEY_ID = 'k8s-ssh' // Your Jenkins SSH key ID
+        REMOTE_HOST = '192.168.4.81' // Replace with the actual address of your remote machine
     }
 
     stages {
@@ -17,17 +19,25 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    sh "sudo docker build -t ${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:v${BUILD_NUMBER} ."
+                sshagent([SSH_KEY_ID]) {
+                    sh """
+                        ssh -o StrictHostKeyChecking=no ${REMOTE_HOST} '
+                            docker build -t ${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:v${BUILD_NUMBER} ${WORKSPACE}
+                        '
+                    """
                 }
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                script {
-                    sh "sudo docker login ${DOCKER_REGISTRY}"
-                    sh "sudo docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:v${BUILD_NUMBER}"
+                sshagent([SSH_KEY_ID]) {
+                    sh """
+                        ssh -o StrictHostKeyChecking=no ${REMOTE_HOST} '
+                            docker login ${DOCKER_REGISTRY}
+                            docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:v${BUILD_NUMBER}
+                        '
+                    """
                 }
             }
         }
