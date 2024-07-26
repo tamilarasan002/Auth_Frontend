@@ -28,7 +28,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/authfrontend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/authfrontend:latest
 
       - name: List Docker images
         run: docker images
