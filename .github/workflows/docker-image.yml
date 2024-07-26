@@ -22,4 +22,4 @@ jobs:
         with:
           context: .  # Build context (root directory)
           push: true
-          tags: tamilarasand002/authfrontend:latest  # Replace with your Docker Hub username and repository name
+          tags: ${{ secrets.DOCKER_USERNAME }}/authfrontend:latest  # Replace with your Docker Hub username and repository name
