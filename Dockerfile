@@ -1,5 +1,5 @@
-# Use the official Node.js image as the base image
-FROM node:14.17-alpine
+# Use the UBI image as the base image
+FROM registry.access.redhat.com/ubi8/nodejs-14
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -18,10 +18,8 @@ COPY . .
 # Build the React.js project
 RUN npm run build
 
+# Expose port 3000
 EXPOSE 3000
-
 
 # Set the command to start the React.js application
 CMD ["npm", "start"]
-
-
