@@ -6,7 +6,7 @@ function App() {
   const [tasks, setTasks] = useState([]);
 
   // Use environment variable for the backend URL
-  const backendURL = 'http://192.168.12.158:8111';
+  const backendURL = process.env.REACT_APP_BACKEND_URL;
 
   // Fetch tasks from the server when the component mounts
   useEffect(() => {
